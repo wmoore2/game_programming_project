@@ -27,6 +27,11 @@ namespace StarterAssets
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
 
+		[Tooltip("The range the player can build at")]
+		public float BuildRange = 15;
+		[Tooltip("How fast the player can build")]
+		public float buildRate = 0.25f;
+
 		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
 		public float JumpTimeout = 0.1f;
@@ -65,14 +70,18 @@ namespace StarterAssets
 		private float _fallTimeoutDelta;
 		private float _fireRateDelta;
 
+		private float nextBuild;
+		
+
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
-		private GameObject _mainCamera;
+		private Camera _mainCamera;
 		private GunController _weapon;
+		private GridController _grid;
 
 		private const float _threshold = 0.01f;
 
@@ -93,12 +102,17 @@ namespace StarterAssets
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
-				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 			}
 
 			if(_weapon == null)
             {
 				_weapon = GameObject.FindGameObjectWithTag("PlayerWeapon").GetComponent<GunController>();
+            }
+
+			if(_grid == null)
+            {
+				_grid = GameObject.FindWithTag("Grid").GetComponent<GridController>();
             }
 		}
 
@@ -121,6 +135,7 @@ namespace StarterAssets
 		{
 			JumpAndGravity();
 			GroundedCheck();
+			BuildCheck();
 			Shoot();
 			Move();
 		}
@@ -130,12 +145,49 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
+		private void BuildCheck()
+        {
+			//enter building mode and carry out building stuff
+			if(_input.buildMode == true)
+            {
+				//use raycast to see where the player is looking, and then tell the grid to place the phantom object there
+				Vector3 rayOrigin = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+
+				RaycastHit hit;
+
+                if (Physics.Raycast(rayOrigin, _mainCamera.transform.forward, out hit, BuildRange))
+                {
+					//if we get a hit on the ground
+					_grid.showPhantom();
+					_grid.setPhantomPosition(hit.point);
+                } else
+                {
+					_grid.hidePhantom();
+                }
+			} else
+            {
+				_grid.hidePhantom();
+            }
+        }
+
 		private void Shoot()
 		{
             if (_input.shoot)
             {
-				//shoot gun
-				_weapon.Shoot();
+				//check if player is in build mode
+                if (_input.buildMode == true)
+                {
+                    if (Time.time > nextBuild)
+                    {
+						nextBuild = Time.time + buildRate;
+						//Place object
+						_grid.placeObstacle();
+                    }
+                } else
+				{
+					//shoot gun
+					_weapon.Shoot();
+				}
             }
 		}
 

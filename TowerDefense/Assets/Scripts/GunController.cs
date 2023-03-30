@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+//A lot of this code was retrieved from an online unity tutorial found here: https://learn.unity.com/tutorial/let-s-try-shooting-with-raycasts
+
 public class GunController : MonoBehaviour
 {
 
@@ -56,22 +58,22 @@ public class GunController : MonoBehaviour
                 // Set the end position for our laser line 
                 laserLine.SetPosition(1, hit.point);
 
-                //// Get a reference to a health script attached to the collider we hit
-                //ShootableBox health = hit.collider.GetComponent<ShootableBox>();
+                // Get a reference to a health script attached to the collider we hit
+                EnemyStatus health = hit.collider.GetComponent<EnemyStatus>();
 
-                //// If there was a health script attached
-                //if (health != null)
-                //{
-                //    // Call the damage function of that script, passing in our gunDamage variable
-                //    health.Damage(gunDamage);
-                //}
+                // If there was a health script attached
+                if (health != null)
+                {
+                    // Call the damage function of that script, passing in our gunDamage variable
+                    health.applyDamage(gunDamage);
+                }
 
-                //// Check if the object we hit has a rigidbody attached
-                //if (hit.rigidbody != null)
-                //{
-                //    // Add force to the rigidbody we hit, in the direction from which it was hit
-                //    hit.rigidbody.AddForce(-hit.normal * hitForce);
-                //}
+                // Check if the object we hit has a rigidbody attached
+                if (hit.rigidbody != null)
+                {
+                    // Add force to the rigidbody we hit, in the direction from which it was hit
+                    hit.rigidbody.AddForce(-hit.normal * hitForce);
+                }
             }
             else
             {

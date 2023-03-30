@@ -6,6 +6,9 @@ TagManager:
   tags:
   - CinemachineTarget
   - PlayerWeapon
+  - enemy
+  - PhantomObstacle
+  - Grid
   layers:
   - Default
   - TransparentFX
