@@ -20,6 +20,9 @@ public class GridController : MonoBehaviour
     private const bool FREE = true;
     //spot will be true if it is free, and false if it is taken
     private bool[,] availableGridSpots = new bool[2*length, 2*width];
+    private GameObject[,] SolidObstacles = new GameObject[2*length, 2*width];
+
+    private PlayerStatus player;
 
     //how many chassis an obstacle takes to build
     public const int ObstacleCost = 5;
@@ -28,6 +31,7 @@ public class GridController : MonoBehaviour
     void Start()
     {
         phantomObject = GameObject.Find("Phantom_Obstacle");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStatus>();
         halfObjLen = objectLength / 2.0f;
         setPhantomActive(false);
         initGridSpots();
@@ -52,7 +56,7 @@ public class GridController : MonoBehaviour
 
     private int convertToArrayIndex(float toConvert, int shift)
     {
-        return (int)((Mathf.Floor(toConvert) / objectLength) + shift); //need to shift because we are not centered at (0,0)
+        return (int)(Mathf.Floor(toConvert / objectLength) + shift); //need to shift because we are not centered at (0,0)
     }
 
     private bool isSpotFree(Vector3 position)
@@ -70,9 +74,29 @@ public class GridController : MonoBehaviour
     private void setSpot(Vector3 position, bool val)
     {
         int x = convertToArrayIndex(position.x, length);
-        int z = convertToArrayIndex(position.z, width); 
+        int z = convertToArrayIndex(position.z, width);
 
         availableGridSpots[x, z] = val;
+    }
+
+    private void storeObstacle(GameObject toStore)
+    {
+        int x = convertToArrayIndex(toStore.transform.position.x, length);
+        int z = convertToArrayIndex(toStore.transform.position.z, width);
+
+        SolidObstacles[x, z] = toStore;
+
+        setSpot(toStore.transform.position, TAKEN);
+    }
+
+    public void removeObstacle(Vector3 pos)
+    {
+        int x = convertToArrayIndex(pos.x, length);
+        int z = convertToArrayIndex(pos.z, width);
+
+        SolidObstacles[x, z] = null;
+
+        setSpot(pos, FREE);
     }
 
     public void setPhantomActive(bool val)
@@ -93,7 +117,10 @@ public class GridController : MonoBehaviour
 
     public void placeObstacle()
     {
-        placeObstacleAtPosition(phantomObject.transform.position);
+        if (isPhantomShowing)
+        {
+            placeObstacleAtPosition(phantomObject.transform.position);
+        }
     }
 
 
@@ -103,8 +130,10 @@ public class GridController : MonoBehaviour
         if (isSpotFree(position))
         {
             //need to check if player has enough chassis, and then subtract it
-            setSpot(position, TAKEN);
-            Instantiate(obstaclePrefab, position, Quaternion.identity);
+            if (player.spendResource(PlayerStatus.rTypes.Chassis, ObstacleCost) == true)
+            {
+                storeObstacle(Instantiate(obstaclePrefab, position, Quaternion.identity));
+            }
         } else
         {
             //if spot is not free, not sure what happens here
@@ -117,7 +146,6 @@ public class GridController : MonoBehaviour
         if (phantomObject != null)
         {
             Vector3 newPos = getGridCoord(position);
-            Debug.Log(isSpotFree(newPos));
             if (isSpotFree(newPos) == FREE)
             {
                 showPhantom();

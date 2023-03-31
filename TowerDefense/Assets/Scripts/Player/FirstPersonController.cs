@@ -71,7 +71,7 @@ namespace StarterAssets
 		private float _fireRateDelta;
 
 		private float nextBuild;
-		
+
 
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -82,6 +82,7 @@ namespace StarterAssets
 		private Camera _mainCamera;
 		private GunController _weapon;
 		private GridController _grid;
+		private PlayerStatus _status;
 
 		private const float _threshold = 0.01f;
 
@@ -105,14 +106,19 @@ namespace StarterAssets
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 			}
 
-			if(_weapon == null)
-            {
+			if (_weapon == null)
+			{
 				_weapon = GameObject.FindGameObjectWithTag("PlayerWeapon").GetComponent<GunController>();
-            }
+			}
 
-			if(_grid == null)
-            {
+			if (_grid == null)
+			{
 				_grid = GameObject.FindWithTag("Grid").GetComponent<GridController>();
+			}
+
+            if (_status == null)
+            {
+				_status = gameObject.GetComponent<PlayerStatus>();
             }
 		}
 
@@ -133,11 +139,14 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
-			BuildCheck();
-			Shoot();
-			Move();
+            if (!_status.IsDead)
+            {
+				JumpAndGravity();
+				GroundedCheck();
+				BuildCheck();
+				Shoot();
+				Move();
+            }
 		}
 
 		private void LateUpdate()
@@ -145,50 +154,65 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
+		private void enterBuild()
+		{
+			_grid.showPhantom();
+			_weapon.hideGun();
+		}
+
+		private void exitBuild()
+		{
+			_grid.hidePhantom();
+			_weapon.showGun();
+		}
+
 		private void BuildCheck()
-        {
+		{
 			//enter building mode and carry out building stuff
-			if(_input.buildMode == true)
-            {
+			if (_input.buildMode == true)
+			{
 				//use raycast to see where the player is looking, and then tell the grid to place the phantom object there
 				Vector3 rayOrigin = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
 
 				RaycastHit hit;
 
-                if (Physics.Raycast(rayOrigin, _mainCamera.transform.forward, out hit, BuildRange))
-                {
+				if (Physics.Raycast(rayOrigin, _mainCamera.transform.forward, out hit, BuildRange))
+				{
 					//if we get a hit on the ground
-					_grid.showPhantom();
+					enterBuild();
 					_grid.setPhantomPosition(hit.point);
-                } else
-                {
+				}
+				else
+				{
 					_grid.hidePhantom();
-                }
-			} else
-            {
-				_grid.hidePhantom();
-            }
-        }
+				}
+			}
+			else
+			{
+				exitBuild();
+			}
+		}
 
 		private void Shoot()
 		{
-            if (_input.shoot)
-            {
+			if (_input.shoot)
+			{
 				//check if player is in build mode
-                if (_input.buildMode == true)
-                {
-                    if (Time.time > nextBuild)
-                    {
+				if (_input.buildMode == true)
+				{
+					if (Time.time > nextBuild)
+					{
 						nextBuild = Time.time + buildRate;
 						//Place object
 						_grid.placeObstacle();
-                    }
-                } else
+					}
+				}
+				else
 				{
 					//shoot gun
 					_weapon.Shoot();
 				}
-            }
+			}
 		}
 
 		private void GroundedCheck()
@@ -205,7 +229,7 @@ namespace StarterAssets
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 

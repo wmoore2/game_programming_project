@@ -41,6 +41,10 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
+		public void OnJumpStarted(InputValue value){
+			Debug.Log("Here");
+		}
+
 		public void OnSprint(InputValue value)
 		{
 			SprintInput(value.isPressed);

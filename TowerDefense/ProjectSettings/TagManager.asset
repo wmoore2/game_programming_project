@@ -9,6 +9,9 @@ TagManager:
   - enemy
   - PhantomObstacle
   - Grid
+  - SolidObstacle
+  - Hitmarker
+  - Runner
   layers:
   - Default
   - TransparentFX
@@ -17,7 +20,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Enemies
   - Character
   - Ground
   - 

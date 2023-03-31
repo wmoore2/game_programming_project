@@ -6,18 +6,20 @@ using System.Collections;
 public class GunController : MonoBehaviour
 {
 
-    public int gunDamage = 1;                                            // Set the number of hitpoints that this gun will take away from shot objects with a health script
+    public float gunDamage = 1.0f;                                            // Set the number of hitpoints that this gun will take away from shot objects with a health script
     public float fireRate = 0.25f;                                        // Number in seconds which controls how often the player can fire
     public float weaponRange = 50f;                                        // Distance in Unity units over which the player can fire
-    public float hitForce = 100f;                                        // Amount of force which will be added to objects with a rigidbody shot by the player
+    public float hitForce = 100f;                                     // Amount of force which will be added to objects with a rigidbody shot by the player
     public Transform gunEnd;                                            // Holds a reference to the gun end object, marking the muzzle location of the gun
+
+    public float hitmarkerDelay = 0.07f;
 
     private Camera fpsCam;                                                // Holds a reference to the first person camera
     private WaitForSeconds shotDuration = new WaitForSeconds(0.02f);    // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible
     //private AudioSource gunAudio;                                        // Reference to the audio source which will play our shooting sound effect
     private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
     private float nextFire;                                                // Float to store the time the player will be allowed to fire again, after firing
-
+    private GameObject hitmarker;
 
     void Start()
     {
@@ -29,6 +31,19 @@ public class GunController : MonoBehaviour
 
         // Get and store a reference to our Camera by searching this GameObject and its parents
         fpsCam = GetComponentInParent<Camera>();
+
+        hitmarker = GameObject.FindGameObjectWithTag("Hitmarker");
+        hitmarker.SetActive(false);
+    }
+
+    public void hideGun()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void showGun()
+    {
+        gameObject.SetActive(true);
     }
 
 
@@ -66,6 +81,8 @@ public class GunController : MonoBehaviour
                 {
                     // Call the damage function of that script, passing in our gunDamage variable
                     health.applyDamage(gunDamage);
+                    //show hitmarker
+                    StartCoroutine(ShowHitMarker());
                 }
 
                 // Check if the object we hit has a rigidbody attached
@@ -83,6 +100,12 @@ public class GunController : MonoBehaviour
         }
     }
 
+    private IEnumerator ShowHitMarker()
+    {
+        hitmarker.SetActive(true);
+        yield return new WaitForSeconds(hitmarkerDelay);
+        hitmarker.SetActive(false);
+    }
 
     private IEnumerator ShotEffect()
     {
