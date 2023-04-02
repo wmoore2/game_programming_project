@@ -35,7 +35,16 @@ public class EnemyController : MonoBehaviour
 
     public void Move()
     {
-        //do nothing?
+        IPathFinder pfinder = GameObject.FindObjectOfType<PathFinderRepository>().GetPathFinder(PathFinderType.HeartFinder);
+        var targetPos = pfinder.NextStep(transform.position);
+        if (targetPos is not null)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos.Value, Time.deltaTime * 20);
+        }
+        else
+        {
+            
+        }
     }
 
     //pretty much a stub

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class GridController : MonoBehaviour
+public class GridController : MonoBehaviour, IPathChanger
 {
     //we only use squares so this is fine
     public float objectLength = 3.0f;
@@ -11,6 +12,9 @@ public class GridController : MonoBehaviour
 
     private static int length = 15;
     private static int width = 15;
+
+    public int Length => length;
+    public int Width => width;
 
 
     private GameObject phantomObject;
@@ -31,6 +35,9 @@ public class GridController : MonoBehaviour
     public const int ObstacleCost = 5;
     public const int TurretCost = 1;
 
+    public event EventHandler<PathChangedEventArgs> PathChanged;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +46,7 @@ public class GridController : MonoBehaviour
         halfObjLen = objectLength / 2.0f;
         setPhantomActive(false);
         initGridSpots();
+        PathChanged?.Invoke(this, new PathChangedEventArgs(29, 15));
     }
 
     // Update is called once per frame
@@ -63,10 +71,27 @@ public class GridController : MonoBehaviour
         return (int)(Mathf.Floor(toConvert / objectLength) + shift); //need to shift because we are not centered at (0,0)
     }
 
+    public (int, int) positionToGridCoordinates(Vector3 position)
+    {
+        return (convertToArrayIndex(position.x, length), convertToArrayIndex(position.z, width));
+    }
+
+    public Vector3 gridCoordinatesToPosition(int x, int z)
+    {
+        // 0.5 to target center of grid square
+        float px = (x - length + 0.5f) * objectLength; 
+        float pz = (z - width +  0.5f) * objectLength;
+        return new Vector3(px, 0, pz);
+    }
+
     private bool isSpotFree(Vector3 position)
     {
         int x = convertToArrayIndex(position.x, length);
         int z = convertToArrayIndex(position.z, width);
+        return isSpotFree(x, z);
+    }
+    public bool isSpotFree(int x, int z)
+    {
         if(x > (length * 2) || z > (width * 2) || x < 0 || z < 0)
         {
             return TAKEN;
@@ -79,8 +104,10 @@ public class GridController : MonoBehaviour
     {
         int x = convertToArrayIndex(position.x, length);
         int z = convertToArrayIndex(position.z, width);
+        Debug.Log($"Placed at: {x}, {z}");
 
         availableGridSpots[x, z] = val;
+        PathChanged?.Invoke(this, new PathChangedEventArgs(29, 15));
     }
 
     private void storeObstacle(GameObject toStore)
