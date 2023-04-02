@@ -26,9 +26,6 @@ public class GunController : MonoBehaviour
         // Get and store a reference to our LineRenderer component
         laserLine = GetComponent<LineRenderer>();
 
-        // Get and store a reference to our AudioSource component
-        //gunAudio = GetComponent<AudioSource>();
-
         // Get and store a reference to our Camera by searching this GameObject and its parents
         fpsCam = GetComponentInParent<Camera>();
 
@@ -109,9 +106,6 @@ public class GunController : MonoBehaviour
 
     private IEnumerator ShotEffect()
     {
-        // Play the shooting sound effect
-        //gunAudio.Play();
-
         // Turn on our line renderer
         laserLine.enabled = true;
 

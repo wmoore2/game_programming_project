@@ -9,6 +9,7 @@ public class ObstacleStatus : MonoBehaviour
     private float currentHealth;
 
     private GridController grid;
+    private TurretController turret;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,13 @@ public class ObstacleStatus : MonoBehaviour
         {
             grid = gameObject.GetComponent<GridController>();
         }
+
+        if(turret == null)
+        {
+            turret = gameObject.GetComponentInChildren<TurretController>();
+        }
+
+        HideTurret();
     }
 
     // Update is called once per frame
@@ -26,6 +34,16 @@ public class ObstacleStatus : MonoBehaviour
     {
         
 
+    }
+
+    public void ShowTurret()
+    {
+        turret.Show();
+    }
+
+    public void HideTurret()
+    {
+        turret.Hide();
     }
 
     public void applyDamage(float damage)

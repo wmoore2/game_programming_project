@@ -171,6 +171,7 @@ namespace StarterAssets
 			//enter building mode and carry out building stuff
 			if (_input.buildMode == true)
 			{
+				_weapon.hideGun();
 				//use raycast to see where the player is looking, and then tell the grid to place the phantom object there
 				Vector3 rayOrigin = _mainCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
 
@@ -178,9 +179,19 @@ namespace StarterAssets
 
 				if (Physics.Raycast(rayOrigin, _mainCamera.transform.forward, out hit, BuildRange))
 				{
-					//if we get a hit on the ground
-					enterBuild();
-					_grid.setPhantomPosition(hit.point);
+					ObstacleStatus obstacle = hit.collider.GetComponent<ObstacleStatus>();
+                    if (obstacle != null)
+                    {
+						//a box has been hit so show turretphantom
+						//TODO actually show a phantom or something to show the player they are building a turret
+						_grid.showTurretPhantom(obstacle);
+                    } else
+                    {
+						//if we get a hit on the ground
+						enterBuild();
+						_grid.setPhantomPosition(hit.point);
+						_grid.hideTurretPhantom();
+                    }
 				}
 				else
 				{

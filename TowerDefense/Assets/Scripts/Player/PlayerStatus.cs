@@ -95,6 +95,18 @@ public class PlayerStatus : MonoBehaviour
         return false;
     }
 
+    public bool spendResources(rTypes dropType1, rTypes dropType2, int amount)
+    {
+        if (resources[(int)dropType1] >= amount && resources[(int)dropType2] >= amount)
+        {
+            resources[(int)dropType1] -= amount;
+            resources[(int)dropType2] -= amount;
+            return true;
+        }
+
+        return false;
+    }
+
     public void applyDamage(float damage)
     {
         currentHealth -= damage;

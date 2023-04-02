@@ -24,8 +24,12 @@ public class GridController : MonoBehaviour
 
     private PlayerStatus player;
 
+    private bool shouldPlaceTurret = false;
+    private ObstacleStatus turretObstacle;
+
     //how many chassis an obstacle takes to build
     public const int ObstacleCost = 5;
+    public const int TurretCost = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -105,6 +109,18 @@ public class GridController : MonoBehaviour
         phantomObject.SetActive(val);
     }
 
+    public void showTurretPhantom(ObstacleStatus obs)
+    {
+        shouldPlaceTurret = true;
+        turretObstacle = obs;
+    }
+
+    public void hideTurretPhantom()
+    {
+        shouldPlaceTurret = false;
+        turretObstacle = null;
+    }
+
     public void showPhantom()
     {
         setPhantomActive(true);
@@ -117,7 +133,14 @@ public class GridController : MonoBehaviour
 
     public void placeObstacle()
     {
-        if (isPhantomShowing)
+        if (shouldPlaceTurret && turretObstacle != null)
+        {
+            if (player.spendResources(PlayerStatus.rTypes.Jets, PlayerStatus.rTypes.Optics, TurretCost) == true)
+            {
+                turretObstacle.ShowTurret();
+
+            }
+        } else if (isPhantomShowing)
         {
             placeObstacleAtPosition(phantomObject.transform.position);
         }

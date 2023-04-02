@@ -12,6 +12,8 @@ TagManager:
   - SolidObstacle
   - Hitmarker
   - Runner
+  - EnemySpawn
+  - Turret
   layers:
   - Default
   - TransparentFX
