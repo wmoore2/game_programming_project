@@ -77,6 +77,11 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
+    public int getResource(rTypes type)
+    {
+        return resources[(int)type];
+    }
+
     public void pickupDrop(rTypes dropType, int amount)
     {
         Debug.Log("Player picked up " + amount + " " + dropType);
