@@ -35,6 +35,7 @@ public class HeartStatus : MonoBehaviour
         if (currentHealth < 0 && !isDead)
         {
             isDead = true;
+            Debug.Log("dead");
             //game is over here? not sure what do
         }
     }

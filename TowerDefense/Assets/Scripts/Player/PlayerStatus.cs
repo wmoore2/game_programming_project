@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
-    public float MaxHealth = 10.0f;
+    public float MaxHealth = 100.0f;
     public float RespawnTimer = 15.0f;
 
     private float currentHealth;

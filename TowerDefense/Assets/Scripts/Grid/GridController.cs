@@ -92,6 +92,15 @@ public class GridController : MonoBehaviour, IPathChanger
                     var status = obstacle.GetComponent<ObstacleStatus>();
                     status.applyDamage(5.1f);
                 }
+                if (surroundingCoord == (29, 15))
+                {
+                    GameObject.FindObjectOfType<HeartStatus>().applyDamage(5.1f);
+                }
+                var player = GameObject.FindObjectOfType<PlayerStatus>();
+                if (surroundingCoord == positionToGridCoordinates(player.transform.position))
+                {
+                    player.applyDamage(5.1f);
+                }
             }
         }
     }
