@@ -89,11 +89,11 @@ public class PathFinder : IPathFinder
 
     private IEnumerable<(int, int)> NeighbouringPositions(int x, int z)
     {
-        foreach ((int neighbourX, int neighbourZ) in neighbourOffsets.Select( t => (x + t.Item1, z + t.Item2)))
+        foreach (var position in neighbourOffsets.Select( t => (x + t.Item1, z + t.Item2)))
         {
-            if (0 <= neighbourX && neighbourX < 2 * _grid.Length && 0 <= neighbourZ && neighbourZ < _grid.Width * 2)
+            if (_grid.PositionIsInGrid(position))
             {
-                yield return (neighbourX, neighbourZ);
+                yield return position;
             }
         }
     }

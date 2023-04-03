@@ -2,10 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateExplode : State
+public class StateExplode : IState
 {
-    public override void Execute(EnemyController character)
+    public bool Execute(EnemyController enemy)
     {
-        character.Explode();
+        enemy.Explode();
+        GameObject.FindObjectOfType<GridController>().DamageNearbyObjects(enemy.transform.position);
+        return false;
+    }
+
+    public IState NextState()
+    {
+        return new StateNull();
     }
 }

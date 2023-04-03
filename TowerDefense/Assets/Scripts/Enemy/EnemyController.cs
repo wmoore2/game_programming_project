@@ -8,12 +8,21 @@ public class EnemyController : MonoBehaviour
     private bool isDead;
     private bool hasExploded = false;
     private bool droppedLoot = false;
-    private State currentState;
+    private IState currentState;
 
     public bool IsDead
     {
         get { return isDead; }
         set { isDead = value; }
+    }
+
+    private bool _damagedByPlayer = false;
+    public bool DamagedByPlayer
+    {
+        get => _damagedByPlayer;
+        set {
+            _damagedByPlayer = true;
+        }
     }
 
     private Runner runner;
@@ -23,39 +32,28 @@ public class EnemyController : MonoBehaviour
     {
         isDead = false;
         runner = GameObject.FindWithTag("Runner").GetComponent<Runner>();
-        ChangeState(new StateMove());
+        currentState = new StateMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentState.Execute(this);
-
+        while (currentState.Execute(this))
+        {
+            currentState = currentState.NextState();
+        }
+        currentState = currentState.NextState();
     }
 
-    public void Move()
+    public void Move(Vector3 destionation)
     {
-        IPathFinder pfinder = GameObject.FindObjectOfType<PathFinderRepository>().GetPathFinder(PathFinderType.HeartFinder);
-        var targetPos = pfinder.NextStep(transform.position);
-        if (targetPos is not null)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos.Value, Time.deltaTime * 20);
-        }
-        else
-        {
-            
-        }
+        transform.position = Vector3.MoveTowards(transform.position, destionation, Time.deltaTime * 20);
     }
 
     //pretty much a stub
     public bool ShouldExplode()
     {
         return false;
-    }
-
-    public void ChangeState(State newState)
-    {
-        currentState = newState;
     }
 
     public void Die()

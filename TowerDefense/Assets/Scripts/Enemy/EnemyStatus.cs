@@ -23,6 +23,12 @@ public class EnemyStatus : MonoBehaviour
 
     }
 
+    public void ApplyDamageFromPlayer(float damage)
+    {
+        applyDamage(damage);
+        controller.DamagedByPlayer = true;
+    }
+
     public void applyDamage(float damage)
     {
         currentHealth -= damage;

@@ -18,7 +18,7 @@ public class ObstacleStatus : MonoBehaviour
 
         if(grid == null)
         {
-            grid = gameObject.GetComponent<GridController>();
+            grid = GameObject.FindObjectOfType<GridController>();
         }
 
         if(turret == null)
@@ -48,6 +48,7 @@ public class ObstacleStatus : MonoBehaviour
 
     public void applyDamage(float damage)
     {
+        Debug.Log("applying damage");
         currentHealth -= damage;
 
         if (currentHealth < 0)
@@ -58,6 +59,7 @@ public class ObstacleStatus : MonoBehaviour
 
     public void destroy()
     {
+        Debug.Log("destroying");
         grid.removeObstacle(transform.position);
         Destroy(gameObject);
     }

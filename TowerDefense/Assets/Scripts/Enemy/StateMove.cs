@@ -2,19 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateMove : State
+public class StateMove : IState
 {
-    public override void Execute(EnemyController character)
+    public StateMove() { }
+    private IState _nextState;
+    public bool Execute(EnemyController enemy)
     {
-        if (character.IsDead)
+        if (enemy.IsDead)
         {
-            character.ChangeState(new StateDead());
-        } else if (character.ShouldExplode())
-        {
-            character.ChangeState(new StateExplode());
-        } else
-        {
-            character.Move();
+            enemy.Die();
+            _nextState = new StateNull();
+            return true;
         }
+        if (enemy.DamagedByPlayer)
+        {
+            _nextState = new StateChasePlayer();
+            return true;
+        }
+        IPathFinder pfinder = GameObject.FindObjectOfType<PathFinderRepository>().GetPathFinder(PathFinderType.HeartFinder);
+        var targetPos = pfinder.NextStep(enemy.transform.position);
+        if (targetPos is not null)
+        {
+            enemy.Move(targetPos.Value);
+            _nextState = this;
+            return false;
+        }
+        else
+        {
+            _nextState = new StateExplode();
+            return true;
+        }
+    }
+    public IState NextState()
+    {
+        return _nextState;
     }
 }

@@ -5,6 +5,19 @@ using System;
 
 public class GridController : MonoBehaviour, IPathChanger
 {
+    private static readonly IEnumerable<(int, int)> _inRangeOffsets = new (int, int)[]
+    {
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, -1), 
+        (0, 0),
+        (0, 1),
+        (1, -1),
+        (1, 0),
+        (1, 1)
+    };
+
     //we only use squares so this is fine
     public float objectLength = 3.0f;
     //public int objectWidth;
@@ -62,6 +75,23 @@ public class GridController : MonoBehaviour, IPathChanger
             for(int j = 0; j < width * 2; j++)
             {
                 availableGridSpots[i, j] = FREE;
+            }
+        }
+    }
+
+    public void DamageNearbyObjects(Vector3 position)
+    {
+        var coord = positionToGridCoordinates(position);
+
+        foreach (var surroundingCoord in PositionsInRange(coord))
+        {
+            if (PositionIsInGrid(surroundingCoord))
+            {
+                if (SolidObstacles[surroundingCoord.x, surroundingCoord.z] is GameObject obstacle)
+                {
+                    var status = obstacle.GetComponent<ObstacleStatus>();
+                    status.applyDamage(5.1f);
+                }
             }
         }
     }
@@ -222,5 +252,18 @@ public class GridController : MonoBehaviour, IPathChanger
         {
             return ((int)(toTransform / objectLength)) * objectLength - halfObjLen;
         }
+    }
+
+    private IEnumerable<(int x, int z)> PositionsInRange((int x, int z) position)
+    {
+        foreach ((int x, int z) in _inRangeOffsets)
+        {
+            yield return (position.x + x, position.z + z);
+        }
+    }
+    public bool PositionIsInGrid((int, int) position)
+    {
+        (int x, int z) = position;
+        return 0 <= x && x < 2 * Length && 0 <= z && z < Width * 2;
     }
 }

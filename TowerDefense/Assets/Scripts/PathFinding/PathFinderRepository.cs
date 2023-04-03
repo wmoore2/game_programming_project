@@ -15,8 +15,11 @@ public class PathFinderRepository : MonoBehaviour
     void Awake()
     {
         pathFinders = new Dictionary<PathFinderType, IPathFinder>();
-        var heartPathFinder = new PathFinder(GameObject.FindGameObjectWithTag("Grid").GetComponent<GridController>());
+        var heartPathFinder = new PathFinder(GameObject.FindObjectOfType<GridController>());
         pathFinders.Add(PathFinderType.HeartFinder, heartPathFinder);
+
+        var playerPathFinder = new PathFinder(GameObject.FindObjectOfType<PlayerWatcher>());
+        pathFinders.Add(PathFinderType.PlayerFinder, playerPathFinder);
     }
 
     public IPathFinder GetPathFinder(PathFinderType type)

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17757852, g: 0.22232255, b: 0.30451798, a: 1}
+  m_IndirectSpecularColor: {r: 0.17757824, g: 0.22232218, b: 0.30451727, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -720,6 +720,7 @@ GameObject:
   - component: {fileID: 1259226220}
   - component: {fileID: 1259226221}
   - component: {fileID: 1259226222}
+  - component: {fileID: 1259226223}
   m_Layer: 0
   m_Name: Master
   m_TagString: Runner
@@ -791,6 +792,18 @@ MonoBehaviour:
   EliteRatio: 5
   isGameOver: 0
   ScalingFactor: 1.05
+--- !u!114 &1259226223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259226219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43554319a7f42a46b58ecfe413d3dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1353842455
 PrefabInstance:
   m_ObjectHideFlags: 0

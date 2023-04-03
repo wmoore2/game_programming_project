@@ -6,7 +6,7 @@ using System.Collections;
 public class GunController : MonoBehaviour
 {
 
-    public float gunDamage = 1.0f;                                            // Set the number of hitpoints that this gun will take away from shot objects with a health script
+    public float gunDamage = 5.0f;                                            // Set the number of hitpoints that this gun will take away from shot objects with a health script
     public float fireRate = 0.25f;                                        // Number in seconds which controls how often the player can fire
     public float weaponRange = 50f;                                        // Distance in Unity units over which the player can fire
     public float hitForce = 100f;                                     // Amount of force which will be added to objects with a rigidbody shot by the player
@@ -77,7 +77,7 @@ public class GunController : MonoBehaviour
                 if (health != null)
                 {
                     // Call the damage function of that script, passing in our gunDamage variable
-                    health.applyDamage(gunDamage);
+                    health.ApplyDamageFromPlayer(gunDamage);
                     //show hitmarker
                     StartCoroutine(ShowHitMarker());
                 }
