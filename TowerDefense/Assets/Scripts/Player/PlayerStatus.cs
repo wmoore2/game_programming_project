@@ -8,6 +8,7 @@ public class PlayerStatus : MonoBehaviour
     public float RespawnTimer = 15.0f;
 
     private float currentHealth;
+    public float CurrentHealth => currentHealth;
 
     private bool isDead = false;
     private float _respawnDelta;
@@ -75,6 +76,11 @@ public class PlayerStatus : MonoBehaviour
                 respawn();
             }
         }
+    }
+
+    public int getResource(rTypes type)
+    {
+        return resources[(int)type];
     }
 
     public void pickupDrop(rTypes dropType, int amount)

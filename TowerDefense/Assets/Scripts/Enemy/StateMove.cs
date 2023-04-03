@@ -29,7 +29,7 @@ public class StateMove : IState
         }
         else
         {
-            _nextState = new StateExplode();
+            _nextState = new StateRandomMove();
             return true;
         }
     }

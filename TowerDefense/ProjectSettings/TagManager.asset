@@ -14,6 +14,8 @@ TagManager:
   - Runner
   - EnemySpawn
   - Turret
+  - GameOver
+  - Heart
   layers:
   - Default
   - TransparentFX

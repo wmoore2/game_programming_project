@@ -15,6 +15,7 @@ public class HeartStatus : MonoBehaviour
 
     private bool isDead = false;
     private float currentHealth;
+    public float CurrentHealth => currentHealth;
 
     // Start is called before the first frame update
     void Start()

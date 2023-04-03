@@ -107,6 +107,6 @@ public class PathFinder : IPathFinder
             return null; // null when you're at your dest
         }
         n = n.Prev;
-        return _grid.gridCoordinatesToPosition(n.X, n.Z);
+        return n is not null ? _grid.gridCoordinatesToPosition(n.X, n.Z) : null;
     }
 }

@@ -7,15 +7,13 @@ public class EnemySpawnController : MonoBehaviour
     public GameObject enemyNormal;
     public GameObject enemyElite;
     private Vector3 SpawnPos;
+    private GridController grid;
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPos = transform.position;
-        SpawnPos.x += 3;
-
-        //for testing
-        SpawnPos = new Vector3(Random.Range(-40, 40), SpawnPos.y, Random.Range(-40, 40));
+        grid = GameObject.FindObjectOfType<GridController>();
+        SpawnPos = grid.gridCoordinatesToPosition(0, 15) + new Vector3(0, 50, 0);
     }
 
     // Update is called once per frame
@@ -26,13 +24,11 @@ public class EnemySpawnController : MonoBehaviour
 
     public GameObject SpawnNormal()
     {
-        SpawnPos = new Vector3(Random.Range(-40, 40), SpawnPos.y, Random.Range(-40, 40));
         return Instantiate(enemyNormal, SpawnPos, Quaternion.identity);
     }
 
     public GameObject SpawnElite()
     {
-        SpawnPos = new Vector3(Random.Range(-40, 40), SpawnPos.y, Random.Range(-40, 40));
         return Instantiate(enemyElite, SpawnPos, Quaternion.identity);
     }
 }
