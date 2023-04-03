@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4138dcb1decdc0d4d8b7106112d70bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  MaxHealth: 200
 --- !u!4 &328772519 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4278218362978476558, guid: c391786ea79f110429e4a24644a08c30,
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5cb7413b1465f441975a2caeefb098f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunDamage: 1
+  gunDamage: 5
   fireRate: 0.1
   weaponRange: 50
   hitForce: 100

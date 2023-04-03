@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public int NumDrops = 1;
+    public float Speed = 20;
     private bool isDead;
     private bool hasExploded = false;
     private bool droppedLoot = false;
@@ -47,7 +48,7 @@ public class EnemyController : MonoBehaviour
 
     public void Move(Vector3 destionation)
     {
-        transform.position = Vector3.MoveTowards(transform.position, destionation, Time.deltaTime * 20);
+        transform.position = Vector3.MoveTowards(transform.position, destionation, Time.deltaTime * Speed);
     }
 
     //pretty much a stub

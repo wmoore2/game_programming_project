@@ -74,6 +74,10 @@ public class PathFinder : IPathFinder
         {
             var currNode = unvisited.MinBy(n => n.Dist); // "Looks O(1) to me" ~ Dijkstra
             unvisited.Remove(currNode);
+            if (currNode.Dist == int.MaxValue)
+            {
+                continue;
+            }
             foreach ((int neighbourX, int neighbourZ) in NeighbouringPositions(currNode.X, currNode.Z))
             {
                 Node node = graph[neighbourX, neighbourZ];

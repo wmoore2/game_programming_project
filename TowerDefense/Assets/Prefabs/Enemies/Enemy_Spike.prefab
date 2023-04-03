@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NumDrops: 5
+  Speed: 4.07
 --- !u!198 &2794937472951769375
 ParticleSystem:
   m_ObjectHideFlags: 0

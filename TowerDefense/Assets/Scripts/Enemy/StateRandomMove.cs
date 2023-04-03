@@ -20,7 +20,8 @@ public class StateRandomMove : IState
 
     public StateRandomMove()
     {
-        randomDirection = directions[random.Next() % 4];
+        //randomDirection = directions[random.Next() % 4];
+        randomDirection = (1, 0);
         _nextState = this;
     }
     public bool Execute(EnemyController enemy)
